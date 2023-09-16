@@ -39,5 +39,7 @@ void environment(char **env);
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
 void error_command(char *exec_args[]);
 char *_strtok(char *str, const char *delim);
-
+int append_character(char **lineptr, size_t *i, char c, size_t *n)
+ssize_t fill_buffer(FILE *stream)
+int initialize_buffer(char **lineptr, size_t *n)
 #endif

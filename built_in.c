@@ -3,7 +3,12 @@
 #define LS_COMMAND 1
 #define CD_COMMAND 2
 
-
+/**
+ * get_command_id - Get the ID of a built-in command.
+ * @command: The command to check.
+ *
+ * Return: The ID of the command or 0 if not found.
+ */
 int get_command_id(const char *command)
 {
 
@@ -18,7 +23,12 @@ int get_command_id(const char *command)
 	return (0);
 }
 
-
+/**
+ * is_builtin_command - Check if a command is a built-in command.
+ * @command: The command to check.
+ *
+ * Return: 1 if it's a built-in command, 0 otherwise.
+ */
 int is_builtin_command(char *command)
 {
 
@@ -27,6 +37,9 @@ int is_builtin_command(char *command)
 	return (command_id != 0);
 }
 
+/**
+ * execute_ls - Execute the 'ls' command.
+ */
 void execute_ls(void)
 {
 pid_t child_pid = fork();
@@ -59,6 +72,10 @@ pid_t child_pid = fork();
 	}
 }
 
+/**
+ * execute_env - Execute the 'env' command.
+ * @env: The environment variables.
+ */
 	void execute_env(char **env)
 	{
 		pid_t child_pid = fork();
@@ -84,6 +101,9 @@ pid_t child_pid = fork();
 		}
 	}
 
+/**
+ * execute_cd - Execute the 'cd' command.
+ */
 void execute_cd(void)
 {
 }

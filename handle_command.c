@@ -1,5 +1,16 @@
 #include "shell.h"
 
+/**
+ * handle_external_command - Execute an external command
+ * @input: The command to execute
+ * @executable_directory: The directory where the executable may be located
+ *
+ * This function takes a user-provided input string,
+ * checks if it corresponds to an external command,
+ * and then executes it. If the command is found in the "/bin/"
+ * directory or in the specified `executable_directory`,
+ * it is executed with any provided arguments.
+ */
 void handle_external_command(char *input, char *executable_directory)
 {
 		char *args[MAX_COMMAND_LEN];

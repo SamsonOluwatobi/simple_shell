@@ -1,5 +1,12 @@
 #include "shell.h"
 
+/**
+ * _dup2 - Duplicates a file descriptor
+ * @oldfd: The old file descriptor to duplicate
+ * @newfd: The new file descriptor to duplicate to
+ *
+ * Return: The new file descriptor, or -1 on failure
+ */
 int _dup2(int oldfd, int newfd)
 {
 	int result;

@@ -1,5 +1,13 @@
 #include "shell.h"
 
+/**
+ * main - Entry point for the simple shell program.
+ * @argc: The number of command-line arguments (unused in this program).
+ * @argv: An array of command-line argument strings (unused in this program).
+ * @env: An array of environment variables.
+ *
+ * Return: 0 on success, non-zero on failure.
+ */
 int main(int argc, char **argv, char **env)
 {
 	char *executable_directory = "/usr/bin", *lineptr = NULL;

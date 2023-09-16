@@ -2,6 +2,13 @@
 
 const char *start_delim(const char *d, char *start, const char *delim);
 
+/**
+ * _strtok - Custom implementation of strtok function
+ * @str: The string to tokenize
+ * @delim: The delimiter characters
+ *
+ * Return: A pointer to the next token or NULL if no more tokens are found
+ */
 char *_strtok(char *str, const char *delim)
 {
 	static char *token_ptr;
@@ -50,6 +57,14 @@ char *_strtok(char *str, const char *delim)
 }
 
 
+/**
+ * start_delim - Helper function to skip leading delimiter characters
+ * @d: A pointer to the current delimiter character
+ * @start: The start position in the string
+ * @delim: The delimiter characters
+ *
+ * Return: A pointer to the first non-delimiter character in the string
+ */
 const char *start_delim(const char *d, char *start, const char *delim)
 {
 	while (*start != '\0')
