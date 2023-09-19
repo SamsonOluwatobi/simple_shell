@@ -86,6 +86,7 @@ int is_executable_in_directory(const char *command, const char *directory)
 * _strncmp - Custom string comparison function
 * @str1: First string
 * @str2: Second string
+* @n: number
 *
 * Return: 0 if strings are equal, non-zero otherwise
 */
