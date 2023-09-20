@@ -1,9 +1,3 @@
-/*
-This code contains 3 functions.
-The first function is named "_dup2" and it duplicates a file descriptor.
-The second function is named "is_executable_in_directory" and it checks if a command is executable in a directory.
-The third function is named "_strncmp" and it compares two strings.
-*/
 #include "shell.h"
 
 /**
