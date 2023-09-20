@@ -18,16 +18,16 @@ int main(int argc, char **argv, char **env)
 
 	while (1)
 	{
-		write(STDOUT_FILENO, "~/SAMIFE$: ) ", 11);
+		if (isatty(STDOUT_FILENO))
+			write(STDOUT_FILENO, "~/SAMIFE$: ) ", 11);
+
 		if (_getline(&lineptr, &len, stdin) == -1)
-		{
-			break;
-		}
+			exit(0);
+
 		lineptr[_strcspn(lineptr, "\n")] = '\0';
 		if (_strcmp(lineptr, "exit") == 0)
-		{
-			break;
-		}
+			exit(0);
+
 		if ((_strcmp(lineptr, "env") == 0) || (_strcmp(lineptr, "printenv") == 0))
 		{
 			environment(env);
@@ -44,6 +44,7 @@ int main(int argc, char **argv, char **env)
 		else
 		{
 			perror("Error ");
+			break;
 		}
 	}
 	free(lineptr);

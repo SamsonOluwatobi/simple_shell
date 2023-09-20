@@ -19,9 +19,8 @@ void execute_command(char *exec_args[], char *exec_dir)
 	}
 	if (child_pid == 0)
 	{
-		int dev_null = open("/dev/null", O_WRONLY);
+		int dev_null = open("/dev/null", O_WRONLY), exec_path_len = 0;
 		char exec_path[MAX_PATH_LEN];
-		int exec_path_len = 0;
 
 		_dup2(dev_null, STDIN_FILENO);
 		_dup2(STDOUT_FILENO, STDERR_FILENO);
@@ -30,7 +29,6 @@ void execute_command(char *exec_args[], char *exec_dir)
 		exec_path[0] = '\0';
 		for (i = 0; i < exec_path_len && i < MAX_PATH_LEN - 1; i++)
 			exec_path[i] = exec_dir[i];
-
 		if (exec_path_len < MAX_PATH_LEN - 1)
 		{
 			exec_path[exec_path_len] = '/';
@@ -42,7 +40,10 @@ void execute_command(char *exec_args[], char *exec_dir)
 
 		exec_path[exec_path_len] = '\0';
 		if (execve(exec_path, exec_args, NULL) == -1)
-			error_command(exec_args);
+		{
+			perror("Error:");
+			exit(1);
+		}
 	}
 	else
 	{

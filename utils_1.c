@@ -85,16 +85,4 @@ void environment(char **env)
 	}
 }
 
-/**
- * error_command - Print an error message for an unrecognized command.
- * @exec_args: The arguments provided to the unrecognized command.
- */
-void error_command(char *exec_args[])
-{
-			char *command = exec_args[0];
 
-			write(STDOUT_FILENO, "SAMIFE: ", 8);
-			write(STDOUT_FILENO, command, _strlen(command));
-			write(STDOUT_FILENO, ": command not found\n", 20);
-			_exit(1);
-}
