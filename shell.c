@@ -19,15 +19,13 @@ int main(int argc, char **argv, char **env)
 	while (1)
 	{
 		write(STDOUT_FILENO, "~/SAMIFE$: ) ", 11);
-		if (getline(&lineptr, &len, stdin) == -1)
+		if (_getline(&lineptr, &len, stdin) == -1)
 		{
-			write(STDOUT_FILENO, "Exiting shell...\n", 18);
 			break;
 		}
 		lineptr[_strcspn(lineptr, "\n")] = '\0';
 		if (_strcmp(lineptr, "exit") == 0)
 		{
-			write(STDOUT_FILENO, "Exiting shell...\n", 18);
 			break;
 		}
 		if ((_strcmp(lineptr, "env") == 0) || (_strcmp(lineptr, "printenv") == 0))
