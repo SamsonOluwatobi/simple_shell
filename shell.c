@@ -19,7 +19,7 @@ int main(int argc, char **argv, char **env)
 	while (1)
 	{
 		write(STDOUT_FILENO, "~/SAMIFE$: ) ", 11);
-		if (_bettygetline(&lineptr, &len, stdin) == -1)
+		if (_getline(&lineptr, &len, stdin) == -1)
 		{
 			break;
 		}
