@@ -12,13 +12,9 @@
 int get_command_id(const char *command)
 {
 
-	if (_strcmp(command, "ls") == 0)
+	if ((_strcmp(command, "ls") == 0))
 	{
 		return (LS_COMMAND);
-	}
-	else if (_strcmp(command, "cd") == 0)
-	{
-		return (CD_COMMAND);
 	}
 	return (0);
 }
