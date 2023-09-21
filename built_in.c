@@ -103,7 +103,12 @@ pid_t child_pid = fork();
 
 /**
  * execute_cd - Execute the 'cd' command.
+ * @path: The path to change the current directory to.
  */
 void execute_cd(void)
 {
+	if (chdir(path) == -1)
+	{
+		perror("chdir");
+	}
 }
