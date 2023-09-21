@@ -55,9 +55,9 @@ pid_t child_pid = fork();
 
 		char *ls_path = "/bin/ls";
 
-
-		if (execve(ls_path, ls_args, ls_env) == -1)
+		if (execve(ls_path, ls_args, ls_env) == 0)
 		{
+			execve(ls_path, ls_args, ls_env);
 			perror("execve");
 			exit(EXIT_FAILURE);
 		}
@@ -97,9 +97,3 @@ pid_t child_pid = fork();
 		}
 	}
 
-/**
- * execute_cd - Execute the 'cd' command.
- */
-void execute_cd(void)
-{
-}
