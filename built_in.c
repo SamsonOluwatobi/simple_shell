@@ -96,18 +96,3 @@ pid_t child_pid = fork();
 			wait(NULL);
 		}
 	}
-
-<<<<<<< HEAD
-=======
-/**
- * execute_cd - Execute the 'cd' command.
- * @path: The path to change the current directory to.
- */
-void execute_cd(void)
-{
-	if (chdir(path) == -1)
-	{
-		perror("chdir");
-	}
-}
->>>>>>> 1dfcff8918a6127bcde0e1e02d8fbcc0f2e31e51
