@@ -53,7 +53,6 @@ int main(int argc, char **argv, char **env)
 /**
  * checkgetline - checks getline
  * @ptr: pointer to array.
- *
  */
 void checkgetline(char *ptr)
 {

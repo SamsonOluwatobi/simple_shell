@@ -1,5 +1,7 @@
 #include "shell.h"
-
+/**
+ * display_prompt - Display a prompt if running interactively.
+ */
 void display_prompt(void)
 {
 	if (isatty(0) == 1)
@@ -7,13 +9,22 @@ void display_prompt(void)
 		write(1, "samife$ ", 8);
 	}
 }
-
+/**
+ * exit_shell - Clean up and exit the shell.
+ * @val: The exit value.
+ * @ptr: Pointer to memory to free.
+ */
 void exit_shell(int val, char *ptr)
 {
 	free(ptr);
 	exit(val);
 }
-
+/**
+ * space - Check if a string consists of only spaces.
+ * @arr: The input string.
+ *
+ * Return: 1 if the string consists of only spaces, 0 otherwise.
+ */
 int space(char *arr)
 {
 	unsigned int j;
@@ -27,7 +38,10 @@ int space(char *arr)
 	}
 	return (1);
 }
-
+/**
+ * environ - Print the environment variables.
+ * @env: The array of environment variables.
+ */
 void environ(char **env)
 {
 	unsigned int j;

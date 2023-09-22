@@ -1,5 +1,10 @@
 #include "shell.h"
-
+/**
+ * command_exec - Execute a command by searching the PATH.
+ * @str: The command and arguments as an array of strings.
+ *
+ * Return: 1 if the command was executed successfully, 0 otherwise.
+ */
 int command_exec(char **str)
 {
 	char *PathToExec, *c, *buff;
