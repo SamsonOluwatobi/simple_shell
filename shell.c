@@ -17,7 +17,7 @@ int main(int argc, char **argv, char **env)
 	while (1)
 	{
 		display_prompt();
-		_gbyte = getline(&arr, &len, stdin);
+		_gbyte = _getline(&arr, &len, stdin);
 		if (_gbyte == -1)
 			checkgetline(arr);
 		if (space(arr))
