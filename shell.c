@@ -8,7 +8,7 @@ void handle_sigint(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
-		print_string("\n#cisfun$ ");
+		print_string("\n#samife$ ");
 	}
 }
 
@@ -37,7 +37,7 @@ void handle_eof(int len, char *buff)
 void check_terminal(void)
 {
 	if (isatty(STDIN_FILENO))
-		print_string("#cisfun$ ");
+		print_string("#samife$ ");
 }
 
 /**
