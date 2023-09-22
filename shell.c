@@ -1,89 +1,62 @@
 #include "shell.h"
-
 /**
-* handle_sigint - handles the SIGINT signal (Ctrl+C)
-* @sig_num: the signal number
-*/
-void handle_sigint(int sig_num)
+ * main - Entry point for the simple shell program.
+ * @argc: The number of command-line arguments (unused in this program).
+ * @argv: An array of command-line argument strings (unused in this program).
+ * @env: An array of environ variables.
+ *
+ * Return: 0 on success, non-zero on failure.
+ */
+int main(int argc, char **argv, char **env)
 {
-	if (sig_num == SIGINT)
-	{
-		print_string("\n#samife$ ");
-	}
-}
+	int _gbyte, pid, x;
+	size_t len = 0;
+	char *arg[10], *arr = NULL;
+	(void) argc, (void)argv;
 
-/**
-* handle_eof - handles the End of File condition
-* @len: the return value of the getline function
-* @buff: the buffer
-*/
-void handle_eof(int len, char *buff)
-{
-	(void)buff;
-	if (len == -1)
+	while (1)
 	{
-		if (isatty(STDIN_FILENO))
+		display_prompt();
+		_gbyte = getline(&arr, &len, stdin);
+		if (_gbyte == -1)
+			checkgetline(arr);
+		if (space(arr))
+			continue;
+		arg[0] = strtok(arr, " \n");
+		if (strcmp(arg[0], "exit") == 0)
 		{
-			print_string("\n");
-			free(buff);
+			exit_shell(0, arr);
 		}
-		exit(0);
-	}
-}
-
-/**
-* check_terminal - checks if the program is running in a terminal
-*/
-void check_terminal(void)
-{
-	if (isatty(STDIN_FILENO))
-		print_string("#samife$ ");
-}
-
-/**
-* main - The Shell program
-* Return: 0 on success
-*/
-int main(void)
-{
-	ssize_t len = 0;
-	char *buff = NULL, *value, *pathname, **args;
-	size_t size = 0;
-	path_list *head = '\0';
-	void (*func)(char **);
-
-	signal(SIGINT, handle_sigint);
-	while (len != EOF)
-	{
-		check_terminal();
-		len = getline(&buff, &size, stdin);
-		handle_eof(len, buff);
-		args = splstr(buff, " \n");
-		if (!args || !args[0])
-			execute_command(args);
-		else
+		if (strcmp(arg[0], "env") == 0 || strcmp(arg[0], "printenv") == 0)
 		{
-			value = get_environment("PATH");
-			head = createPathList(value);
-			pathname = findPathname(args[0], head);
-			func = checkBuiltIn(args);
-			if (func)
-			{
-				free(buff);
-				func(args);
-			}
-			else if (!pathname)
-				execute_command(args);
-			else if (pathname)
-			{
-				free(args[0]);
-				args[0] = pathname;
-				execute_command(args);
-			}
+			environ(env);
+			continue;
+		}
+		x = 0;
+		while (arg[x] != NULL)
+		{
+			x++;
+			arg[x] = strtok(NULL, " \n");
+		}
+		if (command_exec(&arg[0]) == 1)
+		{
+			pid = fork();
+			if (pid == 0)
+				execve(arg[0], arg, NULL);
+			else
+				wait(NULL);
 		}
 	}
-	free_path_list(head);
-	freeArray(args);
-	free(buff);
 	return (0);
+}
+
+/**
+ * checkgetline - checks getline
+ * @ptr: pointer to array.
+ *
+ */
+void checkgetline(char *ptr)
+{
+	write(0, "\n", 2);
+	exit_shell(0, ptr);
 }
