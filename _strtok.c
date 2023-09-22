@@ -3,16 +3,17 @@
 const char *start_delim(const char *d, char *start, const char *delim);
 
 /**
- * __strtok - Custom implementation of _strtok function
+ * _strtok - Custom implementation of _strtok function
  * @str: The string to tokenize
  * @delim: The delimiter characters
  *
  * Return: A pointer to the next token or NULL if no more tokens are found
  */
+#ifdef _STRTOK_IMPLEMENTED
 char *_strtok(char *str, const char *delim)
 {
 	static char *token_ptr;
-	char *start = (str != NULL) ? str : token_ptr, *end;
+	char *start = (str != NULL) ?	 str : token_ptr, *end;
 	int is_delim = 0;
 	const char *d = 0;
 
@@ -55,6 +56,7 @@ char *_strtok(char *str, const char *delim)
 	}
 	return (start);
 }
+#endif
 
 
 /**

@@ -14,6 +14,7 @@
  * Return: Number of characters read (including newline), or -1 on failure or
  * end of file.
  */
+#ifdef _GETLINE_IMPLEMENTED
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 {
 	size_t i = 0;
@@ -49,6 +50,7 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 	(*lineptr)[i] = '\0';
 	return (i);
 }
+#endif
 /**
  * _fgetc - Reads a character from a file stream.
  * @stream: File stream to read from.
