@@ -1,52 +1,89 @@
 #include "shell.h"
 
 /**
- * main - Entry point for the simple shell program.
- * @argc: The number of command-line arguments (unused in this program).
- * @argv: An array of command-line argument strings (unused in this program).
- * @env: An array of environment variables.
- *
- * Return: 0 on success, non-zero on failure.
- */
-int main(int argc, char **argv, char **env)
+* handle_sigint - handles the SIGINT signal (Ctrl+C)
+* @sig_num: the signal number
+*/
+void handle_sigint(int sig_num)
 {
-	char *executable_directory = "/usr/bin", *lineptr = NULL;
-	size_t len = 0;
-	int x = 0;
-	(void)(argc);
-	(void)(argv);
-
-	while (1)
+	if (sig_num == SIGINT)
 	{
-		if (isatty(STDOUT_FILENO))
-			write(STDOUT_FILENO, "~/SAMIFE$: ) ", 11);
+		print_string("\n#samife$ ");
+	}
+}
 
-		if (_getline(&lineptr, &len, stdin) == -1)
-			exit(0);
+/**
+* handle_eof - handles the End of File condition
+* @len: the return value of the getline function
+* @buff: the buffer
+*/
+void handle_eof(int len, char *buff)
+{
+	(void)buff;
+	if (len == -1)
+	{
+		if (isatty(STDIN_FILENO))
+		{
+			print_string("\n");
+			free(buff);
+		}
+		exit(0);
+	}
+}
 
-		lineptr[_strcspn(lineptr, "\n")] = '\0';
-		if (_strcmp(lineptr, "exit") == 0)
-			exit(0);
+/**
+* check_terminal - checks if the program is running in a terminal
+*/
+void check_terminal(void)
+{
+	if (isatty(STDIN_FILENO))
+		print_string("#samife$ ");
+}
 
-		if ((_strcmp(lineptr, "env") == 0) || (_strcmp(lineptr, "printenv") == 0))
-		{
-			environment(env);
-			execute_env(env);
-		}
-		if (is_builtin_command(lineptr))
-		{
-			handle_builtin_command(lineptr);
-		}
-		else if (access(lineptr, X_OK) == 0 || x == 0)
-		{
-			handle_external_command(lineptr, executable_directory);
-		}
+/**
+* main - The Shell program
+* Return: 0 on success
+*/
+int main(void)
+{
+	ssize_t len = 0;
+	char *buff = NULL, *value, *pathname, **args;
+	size_t size = 0;
+	path_list *head = '\0';
+	void (*func)(char **);
+
+	signal(SIGINT, handle_sigint);
+	while (len != EOF)
+	{
+		check_terminal();
+		len = _getline(&buff, &size, stdin);
+		handle_eof(len, buff);
+		args = splstr(buff, " \n");
+		if (!args || !args[0])
+			execute_command(args);
 		else
 		{
-			perror("Error ");
-			break;
+			value = get_environment("PATH");
+			head = createPathList(value);
+			pathname = findPathname(args[0], head);
+			func = checkBuiltIn(args);
+			if (func)
+			{
+				free(buff);
+				func(args);
+			}
+			else if (!pathname)
+				execute_command(args);
+			else if (pathname)
+			{
+				free(args[0]);
+				args[0] = pathname;
+				execute_command(args);
+			}
 		}
 	}
-	free(lineptr);
+	free_path_list(head);
+	freeArray(args);
+	free(buff);
 	return (0);
 }

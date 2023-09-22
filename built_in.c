@@ -1,98 +1,156 @@
 #include "shell.h"
 
-#define LS_COMMAND 1
-#define CD_COMMAND 2
-
 /**
- * get_command_id - Get the ID of a built-in command.
- * @command: The command to check.
- *
- * Return: The ID of the command or 0 if not found.
+ * exit_shell - exits the shell with or without a return status n
+ * @args: array of words of the entered line
  */
-int get_command_id(const char *command)
+void exit_shell(char **args)
 {
+	int i, status;
 
-	if ((_strcmp(command, "ls") == 0))
+	if (args[1])
 	{
-		return (LS_COMMAND);
+		status = convert_to_int(args[1]);
+		if (status <= -1)
+			status = 2;
+		freeArray(args);
+		exit(status);
 	}
-	return (0);
+	for (i = 0; args[i]; i++)
+		free(args[i]);
+	free(args);
+	exit(0);
 }
 
 /**
- * is_builtin_command - Check if a command is a built-in command.
- * @command: The command to check.
- *
- * Return: 1 if it's a built-in command, 0 otherwise.
+ * convert_to_int - converts a string into an integer
+ *@s: pointer to a string
+ *Return: the integer
  */
-int is_builtin_command(char *command)
+int convert_to_int(char *s)
 {
+	int i, num, sign = 1;
 
-	int command_id = get_command_id(command);
-
-	return (command_id != 0);
+	i = 0;
+	num = 0;
+	while (!((s[i] >= '0') && (s[i] <= '9')) && (s[i] != '\0'))
+	{
+		if (s[i] == '-')
+		{
+			sign = sign * (-1);
+		}
+		i++;
+	}
+	while ((s[i] >= '0') && (s[i] <= '9'))
+	{
+		num = (num * 10) + (sign * (s[i] - '0'));
+		i++;
+	}
+	return (num);
 }
 
 /**
- * execute_ls - Execute the 'ls' command.
+ * print_environment - prints the current environment
+ * @args: array of arguments
  */
-void execute_ls(void)
+void print_environment(char **args __attribute__ ((unused)))
 {
-pid_t child_pid = fork();
 
-	if (child_pid == -1)
+	int i;
+
+	for (i = 0; environ[i]; i++)
 	{
-		perror("fork");
-		exit(EXIT_FAILURE);
+		print_string(environ[i]);
+		print_string("\n");
 	}
 
-	if (child_pid == 0)
+}
+
+/**
+ * set_environment - Initialize a new
+ * environment variable, or modify an existing one
+ * @args: array of entered words
+ */
+void set_environment(char **args)
+{
+	int i, j, k;
+
+	if (!args[1] || !args[2])
 	{
-		char *ls_args[] = {"ls", NULL};
+		perror(get_environment("_"));
+		return;
+	}
 
-		char *ls_env[] = {NULL};
-
-
-		char *ls_path = "/bin/ls";
-
-		if (execve(ls_path, ls_args, ls_env) == 0)
+	for (i = 0; environ[i]; i++)
+	{
+		j = 0;
+		if (args[1][j] == environ[i][j])
 		{
-			execve(ls_path, ls_args, ls_env);
-			perror("execve");
-			exit(EXIT_FAILURE);
+			while (args[1][j])
+			{
+				if (args[1][j] != environ[i][j])
+					break;
+
+				j++;
+			}
+			if (args[1][j] == '\0')
+			{
+				k = 0;
+				while (args[2][k])
+				{
+					environ[i][j + 1 + k] = args[2][k];
+					k++;
+				}
+				environ[i][j + 1 + k] = '\0';
+				return;
+			}
 		}
 	}
-	else
+	if (!environ[i])
 	{
-		wait(NULL);
+
+		environ[i] = concatenate_strings(args[1], "=", args[2]);
+		environ[i + 1] = '\0';
+
 	}
 }
 
 /**
- * execute_env - Execute the 'env' command.
- * @env: The environment variables.
+ * unset_environment - Remove an environment variable
+ * @args: array of entered words
  */
-	void execute_env(char **env)
+void unset_environment(char **args)
+{
+	int i, j;
+
+	if (!args[1])
 	{
-		pid_t child_pid = fork();
-
-		if (child_pid == -1)
+		perror(get_environment("_"));
+		return;
+	}
+	for (i = 0; environ[i]; i++)
+	{
+		j = 0;
+		if (args[1][j] == environ[i][j])
 		{
-			perror("fork");
-			exit(EXIT_FAILURE);
-		}
+			while (args[1][j])
+			{
+				if (args[1][j] != environ[i][j])
+					break;
 
-		if (child_pid == 0)
-		{
-			char *env_args[] = {"env", NULL};
-
-
-			execve("/usr/bin/env", env_args, env);
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
-		else
-		{
-			wait(NULL);
+				j++;
+			}
+			if (args[1][j] == '\0')
+			{
+				free(environ[i]);
+				environ[i] = environ[i + 1];
+				while (environ[i])
+				{
+					environ[i] = environ[i + 1];
+					i++;
+				}
+				return;
+			}
 		}
 	}
+}

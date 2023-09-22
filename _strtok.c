@@ -3,7 +3,7 @@
 const char *start_delim(const char *d, char *start, const char *delim);
 
 /**
- * _strtok - Custom implementation of strtok function
+ * __strtok - Custom implementation of _strtok function
  * @str: The string to tokenize
  * @delim: The delimiter characters
  *

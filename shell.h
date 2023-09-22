@@ -1,44 +1,91 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef samife_SHELL_H
+#define samife_SHELL_H
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/wait.h>
 #include <sys/types.h>
-#include <signal.h>
-#include <fcntl.h>
 #include <errno.h>
-#include <sys/stat.h>
 #include <stddef.h>
+#include <sys/stat.h>
+#include <signal.h>
 
-#define MAX_COMMAND_LEN 100
-#define MAX_PATH_LEN 100
+int samife_putchar(char c);
 
-void parse_input(char *input, char *parsed_args[], int *parsed_arg_count);
+void print_string(char *str);
 
-void execute_command(char *exec_args[], char *exec_dir);
+int samife_strlen(char *s);
 
-int is_builtin_command(char *command);
+char *samife_strdup(char *str);
 
-void handle_external_command(char *input, char *executable_directory);
+char *concatenate_strings(char *name, char *sep, char *value);
 
-void handle_builtin_command(char *input);
+char **splstr(char *str, const char *delim);
 
-void execute_ls(void);
-void execute_cd(void);
-void execute_env(char **env);
-int _dup2(int oldfd, int newfd);
-int _strncmp(const char *str1, const char *str2, size_t n);
-int is_executable_in_directory(const char *command, const char *directory);
-size_t _strcspn(const char *str, const char *reject);
-int _strcmp(const char *str1, const char *str2);
-size_t _strlen(const char *str);
-void environment(char **env);
-ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
-void error_command(char *exec_args[]);
-char *_strtok(char *str, const char *delim);
+void execute_command(char **argv);
+
+void *reallocate(void *ptr, unsigned int old_size, unsigned int new_size);
+
+
+extern char **environ;
+
+/**
+* struct path_list - Linked list containing directories in PATH
+* @dir: directory in PATH
+* @next: pointer to next node
+*/
+typedef struct path_list
+{
+	char *dir;
+
+	struct path_list *next;
+} path_list;
+
+
+char *get_environment(const char *name);
+
+path_list *addNodeToEnd(path_list **head, char *str);
+
+path_list *createPathList(char *path);
+
+char *findPathname(char *filename, path_list *head);
+
+/**
+* struct samife_buildin - pointer to function
+* with corresponding buildin command
+* @name: buildin command
+* @func: execute the buildin command
+*/
+typedef struct samife_buildin
+{
+	char *name;
+
+	void (*func)(char **);
+} samife_buildin;
+
+void(*checkBuiltIn(char **arv))(char **arv);
+
 int _fgetc(FILE *stream);
+
+ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
+
+char *_strtok(char *str, const char *delim);
+
+int convert_to_int(char *s);
+
+void exit_shell(char **arv);
+
+void print_environment(char **arv);
+
+void set_environment(char **arv);
+
+void unset_environment(char **arv);
+
+void freeArray(char **arv);
+
+void free_path_list(path_list *head);
+
 
 #endif

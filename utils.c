@@ -1,113 +1,122 @@
 #include "shell.h"
 
 /**
- * _dup2 - Duplicates a file descriptor
- * @oldfd: The old file descriptor to duplicate
- * @newfd: The new file descriptor to duplicate to
- *
- * Return: The new file descriptor, or -1 on failure
- */
-int _dup2(int oldfd, int newfd)
+* samife_strdup - Duplicate a string and return a
+* pointer to the newly allocated memory.
+*
+* @str: Pointer to a string
+* Return: Pointer to a duplicated string
+*/
+char *samife_strdup(char *str)
 {
-	int result;
+	int i, length;
 
-	if (oldfd == newfd)
-	{
-		return (newfd);
-	}
+	char *new_str;
 
-	result = open("/dev/null", O_WRONLY);
+	if (!str)
+	{
+		return (NULL);
+	}
+	for (length = 0; str[length] != '\0';)
+	{
+		length++;
+	}
+	new_str = malloc(sizeof(char) * (length + 1));
+	if (!new_str)
+	{
+		return (NULL);
+	}
+	for (i = 0; i < length; i++)
+	{
+		new_str[i] = str[i];
+	}
+	new_str[length] = '\0';
+	return (new_str);
+}
 
-	if (result == -1)
-	{
-		perror("Error in my_dup2:");
-	}
-	else if (result != newfd)
-	{
-		close(result);
-		result = (-1);
-	}
+/**
+* concatenate_strings - Concatenate three strings
+* into a newly allocated memory.
+*
+* @name: First string
+* @sep: Second string
+* @value: Third string
+* Return: Pointer to the concatenated string
+*/
+char *concatenate_strings(char *name, char *sep, char *value)
+{
+	char *result;
+
+	int length1, length2, length3, i, k;
+
+	length1 = samife_strlen(name);
+	length2 = samife_strlen(sep);
+	length3 = samife_strlen(value);
+
+	result = malloc(length1 + length2 + length3 + 1);
+	if (!result)
+		return (NULL);
+
+	for (i = 0; name[i]; i++)
+		result[i] = name[i];
+	k = i;
+
+	for (i = 0; sep[i]; i++)
+		result[k + i] = sep[i];
+	k = k + i;
+
+	for (i = 0; value[i]; i++)
+		result[k + i] = value[i];
+	k = k + i;
+
+	result[k] = '\0';
+
 	return (result);
 }
 
-
 /**
-* is_executable_in_directory - Checks if
-* a command is executable in a directory
-* @command: The command to check
-* @directory: The directory to search for the command
+* samife_strlen - Get the length of a string.
 *
-* Return: 1 if the command is executable, 0 otherwise
+* @s: Pointer to the string
+* Return: The length of the string
 */
-int is_executable_in_directory(const char *command, const char *directory)
+int samife_strlen(char *s)
 {
-	char exec_path[MAX_PATH_LEN];
+	int i = 0;
 
-	struct stat st;
-	int i = 0, j = 0;
-
-	/* Initialize exec_path as an empty string */
-	exec_path[0] = '\0';
-
-	/* Copy the directory path character by character */
-	while (directory[i] != '\0' && i < MAX_PATH_LEN - 1)
+	while (*(s + i) != '\0')
 	{
-		exec_path[i] = directory[i];
 		i++;
 	}
-
-	/* Add a '/' character if there is space */
-	if (i < MAX_PATH_LEN - 1)
-	{
-		exec_path[i] = '/';
-		i++;
-	}
-
-	/* Copy the command character by character */
-	while (command[j] != '\0' && i < MAX_PATH_LEN - 1)
-	{
-		exec_path[i] = command[j];
-		i++;
-		j++;
-	}
-
-	/* Null-terminate the resulting string */
-	exec_path[i] = '\0';
-
-	/* Check if the file exists and is executable */
-	if (stat(exec_path, &st) == 0 && st.st_mode & S_IXUSR)
-		return (1); /* File exists and is executable */
-
-	return (0); /* File does not exist or is not executable */
+	return (i);
 }
 
 
 /**
-* _strncmp - Custom string comparison function
-* @str1: First string
-* @str2: Second string
-* @n: number
+* samife_putchar - Write a character to stdout.
 *
-* Return: 0 if strings are equal, non-zero otherwise
+* @c: The character to print
+* Return: On success 1. On error, -1 is returned,
+* and errno is set appropriately.
+*/
+int samife_putchar(char c)
+{
+	return (write(1, &c, 1));
+}
+
+/**
+*print_string- Print a string.
+*
+* @str: Pointer to the string
 */
 
-int _strncmp(const char *str1, const char *str2, size_t n)
+void print_string(char *str)
 {
-	while (n > 0)
+	int i = 0;
+
+	while (str[i])
 	{
-		if (*str1 != *str2)
-		{
-			return (*str1 - *str2);
-		}
-
-		if (*str1 == '\0')
-		{
-			return (0);
-		}
-
-		str1++;
-		str2++;
-		n--;
+		samife_putchar(str[i]);
+		i++;
 	}
-	return (0);
 }

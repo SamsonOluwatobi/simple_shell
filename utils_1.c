@@ -1,88 +1,29 @@
 #include "shell.h"
 
-/**
- * _strcspn - Calculate the length of the initial segment of str
- * that consists of characters not in reject.
- * @str: The string to search.
- * @reject: The characters to exclude from the count.
- *
- * Return: The length of the initial segment of str that does not contain
- * any characters from reject.
- */
-size_t _strcspn(const char *str, const char *reject)
+void (*checkBuiltIn(char **arv))(char **arv)
 {
-	const char *s;
-	const char *r;
+	int i, j;
+	samife_buildin builtInCommands[] = {
+		{"exit", exit_shell},
+		{"env", print_environment},
+		{"setenv", set_environment},
+		{"unsetenv", unset_environment},
+		{NULL, NULL}
+	};
 
-	for (s = str; *s; s++)
+	for (i = 0; builtInCommands[i].name; i++)
 	{
-		for (r = reject; *r; r++)
+		j = 0;
+		if (builtInCommands[i].name[j] == arv[0][j])
 		{
-			if (*s == *r)
+			for (j = 0; arv[0][j]; j++)
 			{
-				return (s - str);
+				if (builtInCommands[i].name[j] != arv[0][j])
+					break;
 			}
+			if (!arv[0][j])
+				return (builtInCommands[i].func);
 		}
 	}
-
-	return (s - str);
+	return (0);
 }
-
-/**
- * _strcmp - Compare two strings character by character.
- * @str1: The first string to compare.
- * @str2: The second string to compare.
- *
- * Return: An integer less than, equal to, or greater than zero if str1
- * is found to be less than, equal to, or greater than str2, respectively.
- */
-int _strcmp(const char *str1, const char *str2)
-{
-	while (*str1 && (*str1 == *str2))
-	{
-		str1++;
-		str2++;
-	}
-	return (*(unsigned char *)str1 - *(unsigned char *)str2);
-}
-
-/**
- * _strlen - Calculate the length of a string.
- * @str: The string to calculate the length of.
- *
- * Return: The length of the string.
- */
-size_t _strlen(const char *str)
-{
-	const char *s = str;
-
-	while (*s)
-	{
-		s++;
-	}
-	return (s - str);
-}
-
-/**
- * environment - Print environment variables.
- * @env: The array of environment variables to print.
- */
-void environment(char **env)
-{
-	unsigned int i = 0;
-
-	while (env[i] != NULL)
-	{
-		size_t len = _strlen(env[i]);
-
-		if (write(STDOUT_FILENO, env[i], len) == -1 ||
-		write(STDOUT_FILENO, "\n", 1) == -1)
-		{
-			perror("write");
-			exit(EXIT_FAILURE);
-		}
-		i++;
-	}
-}
-
-
