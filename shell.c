@@ -8,7 +8,7 @@ void handle_sigint(int sig_num)
 {
 	if (sig_num == SIGINT)
 	{
-		print_string("\n#samife$ ");
+		print_string("\n#cisfun$ ");
 	}
 }
 
@@ -37,7 +37,7 @@ void handle_eof(int len, char *buff)
 void check_terminal(void)
 {
 	if (isatty(STDIN_FILENO))
-		print_string("#samife$ ");
+		print_string("#cisfun$ ");
 }
 
 /**
@@ -56,7 +56,7 @@ int main(void)
 	while (len != EOF)
 	{
 		check_terminal();
-		len = _getline(&buff, &size, stdin);
+		len = getline(&buff, &size, stdin);
 		handle_eof(len, buff);
 		args = splstr(buff, " \n");
 		if (!args || !args[0])
